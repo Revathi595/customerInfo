@@ -1,0 +1,80 @@
+<div>
+    <form name="customerForm" #customerForm="ngForm" (ngSubmit)="customerForm.reset()">
+        <div class="row g-3 align-items-center m-2">
+            <div class="col-2">
+                <label for="customerName" class="col-form-label">Name <span class="text-danger">*</span> </label>
+            </div>
+            <div class="col-3">
+                <input type="text" class="form-control" id="customerName" name="customerName" autocomplete="off"
+                    placeholder="Enter Name" [(ngModel)]="customerObj.initObj.name" #customerName="ngModel" required>
+            </div>
+            <div class="col-3"
+                *ngIf="customerName.invalid && (customerName.touched) && customerName.errors?.['required']">
+                <span class="invalid-feedback d-block"> Name is required.</span>
+            </div>
+        </div>
+
+        <div class="row g-3 align-items-center m-2">
+            <div class="col-2">
+                <label for="employeeID" class="col-form-label">Employee ID<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-3">
+                <input type="text" class="form-control col-sm-3" id="employeeID" name="employeeID"
+                    #customerEmpId="ngModel" autocomplete="off" placeholder="Enter Employee ID" appValidateNumbers
+                    [(ngModel)]="customerObj.initObj.empId" required>
+            </div>
+            <div class="col-3"
+                *ngIf="customerEmpId.invalid && (customerEmpId.dirty || customerEmpId.touched) && customerEmpId.errors?.['required']">
+                <span class="invalid-feedback d-block"> Employee ID is required.</span>
+            </div>
+        </div>
+        <div class="row g-3 align-items-center m-2">
+            <div class="col-2">
+                <label for="city" class="col-form-label">City<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-3">
+                <select class="form-control col-sm-3" name="cityName" id="city" #city="ngModel"
+                    [(ngModel)]="customerObj.initObj.city" required>
+                    <option value="">Select City</option>
+                    <option *ngFor="let cityObj of customerObj.cityList" [value]="cityObj.name">{{cityObj.name}}
+                    </option>
+                </select>
+            </div>
+            <div class="col-3" *ngIf="city.invalid && (city.dirty || city.touched) && city.errors?.['required']">
+                <span class="invalid-feedback d-block"> City is required.</span>
+            </div>
+        </div>
+        <div class="row g-3 align-items-center m-2">
+            <div class="col-2">
+                <label for="gender" class="col-form-label">Gender<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-8">
+                <div class="form-check form-check-inline col-1" *ngFor="let item of customerObj.genderList">
+                    <input class="form-check-input" type="checkbox" [name]="item.name" [id]="item.name"
+                        [value]="item.name" [(ngModel)]="item.check" [checked]="customerObj.initObj.gender==item.name"
+                        (change)="setGender(item)">
+                    <label class="form-check-label" for="gender">{{item.name}}</label>
+                </div>
+            </div>
+        </div>
+        <div class="row g-3 align-items-center m-2">
+            <input type="button" class="btn btn-primary col-auto" value="Save"
+                [disabled]="!customerObj.initObj.gender || !customerForm.valid" (click)="saveForm()">
+        </div>
+    </form>
+
+    <div class="card m-5 p-2" style="width:40%;" *ngIf="customerObj.getData && customerObj.getData.name">
+        <div class="d-flex" (click)="editRecord(customerObj.getData)">
+            <h6>Employee Name : </h6><label style="cursor: pointer;"> {{customerObj.getData.name}}</label>
+        </div>
+        <div class="d-flex">
+            <h6>Employee ID : </h6><label> {{customerObj.getData.empId}}</label>
+        </div>
+        <div class="d-flex">
+            <h6>City : </h6><label> {{customerObj.getData.city}}</label>
+        </div>
+        <div class="d-flex">
+            <h6>Gender : </h6><label> {{customerObj.getData.gender}}</label>
+        </div>
+    </div>
+</div>
